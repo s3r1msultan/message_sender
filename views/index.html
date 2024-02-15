@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Send Email</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="./style.css"
+    />
+  </head>
+  <body>
+    <div class="container text-center">
+      <h2 class="mb-4">Connect Better, Faster, Stronger</h2>
+      <p>
+        Send your message across with just a click. Simple, secure, and swift email communication.
+      </p>
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <form id="send_email">
+            <div class="form-group">
+              <label for="full_name">Full Name:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="full_name"
+                name="full_name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="from">Email:</label>
+              <input
+                type="email"
+                class="form-control"
+                id="from"
+                name="from"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="subject">Subject:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="subject"
+                name="subject"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="message">Message:</label>
+              <textarea
+                class="form-control"
+                id="message"
+                name="text"
+                rows="3"
+                required
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary"
+            >
+              Send Email
+            </button>
+          </form>
+        </div>
+      </div>
+      <div id="responseMessage"></div>
+    </div>
+    <footer
+      class="text-center py-4 mt-5"
+      style="background-color: #eaeff2"
+    >
+      <div class="container">
+        <h5>Laboratory Work 7 - Web Technologies (Backend)</h5>
+        <p>SE-2210 | Serimbetov Yersultan</p>
+        <hr />
+        <h5>About Mailer</h5>
+        <p>
+          Mailer simplifies email communication, providing a user-friendly platform for sending
+          emails swiftly and securely. With support for custom subjects and messages, our service
+          ensures your important information reaches its destination reliably. <br />
+          You can change settings of sending messages in <b>.env</b> file
+        </p>
+        <hr />
+        <p><strong>Project Dependencies:</strong></p>
+        <ul class="list-inline">
+          <li class="list-inline-item"><i class="fas fa-cube"></i> Express.js</li>
+          <li class="list-inline-item"><i class="fas fa-envelope"></i> Nodemailer</li>
+          <li class="list-inline-item"><i class="fas fa-key"></i> dotenv</li>
+        </ul>
+      </div>
+    </footer>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("send_email").addEventListener("submit", (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const json = JSON.stringify(Object.fromEntries(formData));
+          fetch("/send_email", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: json,
+          })
+            .then((response) => {
+              if (response.ok) {
+                return response.json();
+              }
+              throw new Error("Network response was not ok");
+            })
+            .then((data) => {
+              document.getElementById("responseMessage").innerHTML =
+                '<div class="alert alert-success mt-4" role="alert">Message sent successfully!</div>';
+            })
+            .catch((error) => {
+              document.getElementById("responseMessage").innerHTML =
+                '<div class="alert alert-danger mt-4" role="alert">Error sending message. Please try again.</div>';
+            });
+        });
+      });
+    </script>
+  </body>
+</html>
